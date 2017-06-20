@@ -2,19 +2,21 @@
 
 ### Setting Up Your Testing Environment
 
-When setting up the testing environment, this can become a challenging task. For example when testing on-site at client premises there might be restrictions when using an enterprise Access Point due to limitations in the connections that can be made (e.g. ports are blocked), making it more difficult to start a dynamic analysis of the app. Rooted phones might also not be allowed within the enterprise network due to company policies. Also, root detection and other countermeasures implemented within an app can lead to significant extra work just to be able to finally test the app. Either way, the testing team responsible for the Android assessment need to work together with the app developer(s) and operation team in order to find a proper solution for a working testing environment.
+Setting up a testing environment can be a challenging task. When performing testing on-site at client premises, the restrictions on the enterprise wireless access points and networks may make dynamic analysis more difficult. Company policies may prohibit use of rooted phones or network testing tools (hardware and software) within the enterprise networks. Apps implementing root detection and other reverse engineering countermeasures may add a significant amount of extra work before further analysis can be performed.
 
-This section will give an overview of different methods on how an Android app can be tested and will illustrate also its limitations. Due to the reasons stated above you should be aware of all possible testing methods to select the right one for your testing environment, but also to articulate restrictions so that everybody in the project is on the same page.
+To overcome these and other challenges, the testing team responsible for Android app assessment needs to work together with the app developers and the operation team in order to find a proper solution for an effective testing environment.
+
+This section provides an overview of different methods of testing an Android app and illustrates their limitations. For the reasons stated above, not all testing methods documented here may be applicable for your testing environment. Being able to articulate the reasons for these restrictions will help all the project stakeholders to be on the same page.
 
 #### Preparation
 
-Security testing involves many invasive tasks such as monitoring and manipulating the network traffic between the mobile app and its remote endpoints, inspecting the app's data files, and instrumenting API calls. Security controls like SSL Pinning and root detection might can impede these tasks and slow down the testing dramatically.
+Security testing involves many invasive tasks such as monitoring and manipulating the network traffic between the mobile app and its remote endpoints, inspecting the app's data files, and instrumenting API calls. Security controls like SSL Pinning and root detection might impede these tasks and slow down testing dramatically.
 
-During the preparation phase it should be discussed with the company developing the mobile app, to provide two versions of the app. One app should be built as release to check if the implemented controls like SSL Pinning are working properly or can be easily bypassed. The same app should also be provided as debug build that deactivates certain security controls. Through this approach all scenarios and test cases can be tested in the most efficient way.
+To overcome these obstacles, it might make sense to request two build variants of the app from the development team. One variant should be provided as a release build to check if the implemented controls like SSL Pinning are working properly or can be easily bypassed. The second variant should also be provided as a debug build that deactivates certain security controls. This approach makes it possible to cover all scenarios and test cases in the most efficient way.
 
-This approach needs of course to align with the scope of the engagement and if it's a black box or white box test, see section "Static Analysis" above for further information. For a white box test, requesting for a production and debug build will help to go through all test cases and give a clear statement of the security maturity of the app. For a black box test it might be already the intention of the client to see what can be done in a certain amount of time with the production app and how effective the implemented security controls are.
+Of course, depending on the scope of the engagement, such approach may not be possible. For a white box test, requesting both production and debug builds will help to go through all test cases and give a clear statement of the security maturity of the app. For a black box test, the client might prefer the test to be focused on the production app, with the goal of evaluating the effectiveness of its security controls.
 
-Either way, the following items should be discussed with the company developing the mobile app and it should be decided if the implemented security controls can be adjusted to get the best out of the testing exercise.  
+For both types of testing engagements, the scope should be discussed during the preparation phase. For example, it should be decided whether the security controls should be adjusted. Additional topics to cover are discussed below.
 
 ##### OS Versions
 
@@ -33,23 +35,23 @@ Once the network is configured and connectivity is established between the testi
 
 After finishing these steps and starting the app, the requests should show up in the interception proxy.
 
-
 ##### Rooting Your Device
 
 ###### Risks of Rooting
 
 As a security tester, you may want to root your mobile device: while some tests can be performed on a non-rooted mobile, some do require a rooted one. However, you need to be aware of the fact that rooting is not an easy process and requires advanced knowledge. Rooting is risky, and three main consequences need to be clarified before you may proceed: rooting
-* usually voids the device guarantee (always check the manufacturer policy before taking any action),
-* may "brick" the device, e.g. render it inoperable and unusable.
-* brings additional security risks as built-in exploit mitigations are often removed.
+
+* Usually voids the device warranty (always check the manufacturer policy before taking any action),
+* May "brick" the device, i.e., render it inoperable and unusable.
+* Brings additional security risks as built-in exploit mitigations are often removed.
 
 **You need to understand that rooting your device is ultimately YOUR own decision and that OWASP shall in no way be held responsible for any damage. In case you feel unsure, always seek expert advice before starting the rooting process.**
 
 ###### What Mobiles Can Be Rooted?
 
-Virtually, any Android mobile can be rooted. Commercial versions of Android OS, at the kernel level evolutions of Linux OS, are optimized for the mobile world. Here some features are removed or disabled, such as the possibility for a non-privileged user to become the 'root' user (who has elevated privileges). Rooting a phone means adding the feature to become the root user, e.g. technically speaking adding a standard Linux executable called 'su' used for switching users.
+Virtually, any Android mobile can be rooted. Commercial versions of Android OS, at the kernel level evolutions of Linux OS, are optimized for the mobile world. Here some features are removed or disabled, such as the possibility for a non-privileged user to become the 'root' user (who has elevated privileges). Rooting a phone means adding the feature to become the root user, e.g. technically speaking adding a standard Linux executable called `su` used for switching users.
 
-The first step in rooting a mobile is to unlock its boot loader. The procedure depends on each manufacturer. However, for practical reasons, rooting some mobiles is more popular than rooting others, particularly when it comes to security testing: devices created by Google (and manufactured by other companies like Samsung, LG and Motorola) are among the most popular, particularly because they are widely used by developers. The device warranty is not nullified when the boot loader is unlocked and Google provides many tools to support the root itself to work with rooted devices. A curated list of guide on rooting devices from all major brands can be found in xda forums<sup>[21]</sup>.
+The first step in rooting a mobile is to unlock its boot loader. The procedure depends on each manufacturer. However, for practical reasons, rooting some mobiles is more popular than rooting others, particularly when it comes to security testing: devices created by Google (and manufactured by other companies like Samsung, LG and Motorola) are among the most popular, particularly because they are widely used by developers. The device warranty is not nullified when the boot loader is unlocked and Google provides many tools to support the root itself to work with rooted devices. A curated list of guide on rooting devices from all major brands can be found in XDA forums<sup>[21]</sup>.
 
 See also "Android Platform Overview" for further details.
 
@@ -94,8 +96,8 @@ HTTP and HTTPS requests should now be routed over the proxy on the host machine.
 
 An easy way to install a CA certificate is pushing the cert to the device and adding it to the certificate store via Security Settings. For example, you can install the PortSwigger (Burp) CA certificate as follows:
 
-1. Start Burp and navigate to http://burp/ using a web browser on the host, and download cacert.der by clicking the "CA Certificate" button.
-2. Change the file extension from .der to .cer
+1. Start Burp and navigate to http://burp/ using a web browser on the host, and download `cacert.der` by clicking the "CA Certificate" button.
+2. Change the file extension from `.der` to `.cer`
 3. Push the file to the emulator:
 
 ```bash
@@ -103,7 +105,7 @@ $ adb push cacert.cer /sdcard/
 ```
 
 4. Navigate to "Settings" -> "Security" -> "Install from SD Card"
-5. Scroll down and tap on "cacert.cer"
+5. Scroll down and tap on `cacert.cer`
 
 You should now be prompted to confirm installation of the certificate (you'll also be asked to set a device PIN if you haven't already).
 
@@ -132,62 +134,17 @@ There are several downsides when using an emulator. You might not be able to tes
 
 Nevertheless several hardware characteristics can be emulated, like GPS<sup>[6]</sup> or SMS<sup>[7]</sup> and many more.
 
-
-#### Potential Obstacles
-
-For the following security controls that might be implemented into the app you are about to test, it should be discussed with the project team if it is possible to provide a debug build. A debug build has several benefits when provided during a (white box) test, as it allows a more comprehensive analysis.
-
-##### SSL Pinning
-
-SSL Pinning is a mechanism to make dynamic analysis harder. Certificates provided by an interception proxy to enable a Man-in-the-middle position are declined and the app will not make any requests. To be able to efficiently test during a white box test, a debug build with deactivated SSL Pinning should be provided.
-
-For a black box test, there are several ways to bypass SSL Pinning, for example SSLUnpinning<sup>[11]</sup> or Android-SSL-TrustKiller<sup>[12]</sup>. Therefore bypassing can be done within seconds, but only if the app uses the API functions that are covered for these tools. If the app is using a different framework or library to implement SSL Pinning that is not implemented yet in those tools, the patching and deactivation of SSL Pinning needs to be done manually and can become time consuming.
-
-To manually deactivate SSL Pinning there are two ways:
-* Dynamical Patching while running the App, by using Frida<sup>[9] [13]</sup> or ADBI<sup>[10]</sup>
-* Disassembling the APK, identify the SSL Pinning logic in smali code, patch it and reassemble the APK<sup>[7] [22]</sup>
-
-Once successful, the prerequisites for a dynamic analysis are met and the apps communication can be investigated.
-
-See also test case "Testing Custom Certificate Stores and SSL Pinning" for further details.
-
-##### Root Detection
-
-Root detection can be implemented using pre-made libraries like RootBeer<sup>[14]</sup> or custom checks. An extensive list of root detection methods is presented in the "Testing Anti-Reversing Defenses on Android" chapter.
-
-In a typical mobile app security build, you'll usually want to test a debug build with root detection disabled. If such a build is not available for testing, root detection can be disabled using a variety of methods which will be introduced later in this book.
-
 ### Testing Methods
 
-#### Static Analysis
+#### Manual Static Analysis
 
-Static analysis is the act of looking into app components, source code and other resources without actually executing it. This test is focused on finding misconfigured or unprotected Android IPC components, as well as finding programming mistakes such as misuse of cryptography routines, find libraries with known vulnerabilities and even dynamic code loading routines.
+In principle, we talk about white-box testing when the source code (or even better, the complete Android Studio project) is available, and black-box if only APK package is available. In Android app security testing however, the difference is not all that big. The majority of apps can be decompiled easily, and with some reverse engineering knowledge, having access to bytecode and binary code is almost as good as having the original code, except in cases where the release build is purposefully obfuscated.
 
-Static analysis should be supported through the usage of tools, to make the analysis efficient and to allow the tester to focus on the more complicated business logic. There are a plethora of static code analyzers that can be used, ranging from open source scanners to full blown enterprise ready scanners. The decision on which tool to use depends on the budget, requirements by the client and the preferences of the tester.
-
-Some Static Analyzers rely on the availability of the source code while others take the compiled APK as input.
-It is important to keep in mind that while static analyzers can help us to focus attention on potential problems, they may not be able to find all the problems by itself. Go through each finding carefully and try to understand what the app is doing to improve your chances of finding vulnerabilities.
-
-One important thing to note is to configure the static analyzer properly in order to reduce the likelihood of false positives and maybe only select several vulnerability categories in the scan. The results generated by static analyzers can otherwise be overwhelming and the effort can become counterproductive if an overly large report need to be manually investigated.
-
-Static Analysis can be divided into two categories, **White box** and **Black box**. The first is when the source code is available and the other is when we only have the compiled application or library. We will now go into more details on each category.
-
-##### Static Analysis with Source Code ("White-Box")
-
-**White box testing** an app is the act of testing an app with the source code available. To accomplish the source code testing, you will want to have a setup similar to the developer. You will need a testing environment on your machine with the Android SDK and an IDE installed. It is also recommended to have access either to a physical device or an emulator, so you can debug the app.
-
-Once you have the setup ready and the source code indexed by an IDE (Android Studio is recommended since it is the current IDE of choice by Google), you can start debugging and searching for interesting parts of code.
-Begin by testing each [Android Component](0x05a-Platform-Overview.md#app-components). Check whether they are exported and the enforcing permissions that are in place. Android Lint<sup>[15]</sup> can help in the identification of such problems. Any Android component manipulating sensitive data (contacts, location, images, etc.) should be investigated carefully.
-
-Proceed on to testing the libraries the application has embedded: some libraries contain known vulnerabilities and you should check for that. Some of the question you may want to answer are: what libraries are the app using? Which version of the libraries are being used? Do they have any known vulnerability?
-
-Since you have the source code in hand, you can check for cryptographic mistakes in the implementation. Look for hard coded keys and implementation errors related to cryptography functions. Devknox<sup>[16]</sup> can help checking most common cryptographic mistakes since it is embedded to the IDE.
-
-##### Static Analysis without Source Code ("Black-Box")
+To accomplish the source code testing, you will want to have a setup similar to the developer. You will need a testing environment on your machine with the Android SDK and an IDE installed. It is also recommended to have access either to a physical device or an emulator, so you can debug the app.
 
 During **Black box testing** you will not have access to the source code in its original form. Usually, you will have the application package in hand (in Android .apk format<sup>[17]</sup>), which can be installed on an Android device or reverse engineered with the goal to retrieve parts of the source code.
 
-An easy way on the CLI to retrieve the source code of an APK is through <code>apkx</code>, which also packages <code>dex2jar</code> and CFR and automates the extracting, conversion and decompilation steps. Install it as follows:
+An easy way on the CLI to retrieve the source code of an APK is through `apkx`, which also packages `dex2jar` and CFR and automates the extracting, conversion and decompilation steps. Install it as follows:
 
 ```
 $ git clone https://github.com/b-mueller/apkx
@@ -195,7 +152,7 @@ $ cd apkx
 $ sudo ./install.sh
 ```
 
-This should copy <code>apkx</code> to <code>/usr/local/bin</code>. Run it on the APK that need to be tested:
+This should copy `apkx` to `/usr/local/bin`. Run it on the APK that need to be tested:
 
 ```bash
 $ apkx UnCrackable-Level1.apk
@@ -209,11 +166,20 @@ If the application is based solely on Java and does not have any native library 
 
 More details and tools about the Android reverse engineering topic can be found at [Tampering and Reverse Engineering on Android](0x05b-Reverse-Engineering-and-Tampering.md) section.
 
-Besides reverse engineering, there is a handful of automated tools that perform security analysis on the APK itself searching for vulnerabilities.
-Some of these tools are:
-* QARK<sup>[18]</sup>,
-* Androbugs<sup>[19]</sup> and
-* JAADAS<sup>[20]</sup>.
+#### Automated Static Analysis
+
+Static analysis should be supported through the usage of tools, to make the analysis efficient and to allow the tester to focus on the more complicated business logic. There are a plethora of static code analyzers that can be used, ranging from open source scanners to full blown enterprise ready scanners. The decision on which tool to use depends on the budget, requirements by the client and the preferences of the tester.
+
+Some Static Analyzers rely on the availability of the source code while others take the compiled APK as input.
+It is important to keep in mind that while static analyzers can help us to focus attention on potential problems, they may not be able to find all the problems by itself. Go through each finding carefully and try to understand what the app is doing to improve your chances of finding vulnerabilities.
+
+One important thing to note is to configure the static analyzer properly in order to reduce the likelihood of false positives and maybe only select several vulnerability categories in the scan. The results generated by static analyzers can otherwise be overwhelming and the effort can become counterproductive if an overly large report need to be manually investigated.
+
+Automated tools for performing security analysis on an APK are:
+
+- QARK<sup>[18]</sup>,
+- Androbugs<sup>[19]</sup> and
+- JAADAS<sup>[20]</sup>.
 
 #### Dynamic Analysis
 
@@ -221,13 +187,13 @@ Compared to static analysis, dynamic analysis is applied while executing the mob
 
 When we talk about dynamic analysis of applications that rely on the HTTP(S) protocol, several tools can be used to support the dynamic analysis. The most important tools are so called interception proxies, like OWASP ZAP or Burp Suite Professional to name the most famous ones. An interception proxy allows the tester to have a Man-in-the-middle position in order to read and/or modify all requests made from the app and responses coming from the endpoint for testing Authorization, Session Management and so on.
 
-#### Drozer
+##### Drozer
 
 Drozer<sup>[25]</sup> is an Android security assessment framework that allows you to search for security vulnerabilities in apps and devices by assuming the role of a third party app interacting with the other application's IPC endpoints and the underlying OS. The following section documents the steps necessary to install and begin using Drozer.
 
-##### Installing Drozer
+###### Installing Drozer
 
-###### Building from Source
+**Building from Source:**
 
 ```
 git clone https://github.com/mwrlabs/drozer/
@@ -238,13 +204,13 @@ python setup.py build
 sudo env "PYTHONPATH=$PYTHONPATH:$(pwd)/src" python setup.py install
 ```
 
-###### Installing .egg
+**Installing .egg: **
 
 ```
 sudo easy_install drozer-2.x.x-py2.7.egg
 ```
 
-###### Building for Debian/Ubuntu
+**Building for Debian/Ubuntu:**
 
 ```
 sudo apt-get install python-stdeb fakeroot
@@ -256,17 +222,17 @@ python setup.py --command-packages=stdeb.command bdist_deb
 
 ```
 
-###### Installing .deb (Debian/Ubuntu)
+**Installing .deb (Debian/Ubuntu):**
 
 ```
 sudo dpkg -i deb_dist/drozer-2.x.x.deb
 ```
 
-###### Installing on Arch Linux
+**Installing on Arch Linux:**
 
 `yaourt -S drozer`
 
-##### Installing the Agent
+**Installing the Agent:**
 
 Drozer can be installed using Android Debug Bridge (adb).
 
@@ -274,7 +240,7 @@ Download the latest Drozer Agent [here](https://github.com/mwrlabs/drozer/releas
 
 `$ adb install drozer-agent-2.x.x.apk`
 
-##### Starting a Session
+**Starting a Session:**
 
 You should now have the Drozer console installed on your PC, and the Agent running on your test device. Now, you need to connect the two and you’re ready to start exploring.
 
@@ -301,12 +267,12 @@ selecting f75640f67144d9a3 (unknown sdk 4.1.1)
 dz>
 ```
 
-##### Using Modules
+**Using Modules:**
 
 Out of the box, Drozer provides modules to investigate various aspects of the Android platform, and a few
 remote exploits. You can extend Drozer's functionality by downloading and installing additional modules.
 
-###### Finding Modules
+**Finding Modules:**
 
 The official Drozer module repository is hosted alongside the main project on Github. This is automatically set
 up in your copy of Drozer. You can search for modules using the `module` command:
@@ -332,7 +298,7 @@ mwrlabs.urls
 
 ```
 
-###### Installing Modules
+**Installing Modules:**
 
 You can install modules using the `module` command:
 
@@ -351,26 +317,34 @@ Firebase Cloud Messaging (FCM) is the successor of Google Cloud Messaging (GCM) 
 
 ![Architectural Overview](Images/Chapters/0x05b/FCM-notifications-overview.png)
 
-Downstream messages are sent from the application server to the client app (Push notifications); Upstream messages are sent from the client app to the server.
+Downstream messages are sent from the application server to the client app (push notifications); upstream messages are sent from the client app to the server.
 
-FCM is available for Android and also for iOS and Chrome and can therefore be used on different platforms. FCM provides two connection server protocols at the moment: HTTP and XMPP. There are several differences in the implementation of HTTP And XMPP<sup>[24]</sup> when using them in FCM. The following example focuses on intercepting FCM using HTTP.
+FCM is available for Android and also for iOS and Chrome. FCM provides two connection server protocols at the moment: HTTP and XMPP and there are several differences in the implementation, as described in the official documentation<sup>[24]</sup>. The following example demonstrates how to intercept both protocols.
 
 ##### Preparation
 
-For a full dynamic analysis of an Android app also FCM should be intercepted. To be able to intercept the messages several steps should be considered for preparation. The following example can be used on Mac OS X:
+For a full dynamic analysis of an Android app FCM should be intercepted. To be able to intercept the messages several steps should be considered for preparation.
 
 * Install the CA certificate of your interception proxy into your Android phone<sup>[2]</sup>.
-* A Man-in-the-middle attack should be executed so all traffic from the mobile device is redirected to your testing machine. This can be done by using a tool like ettercap<sup>[24]</sup>. It can be installed by using brew.
+* A Man-in-the-middle attack should be executed so all traffic from the mobile device is redirected to your testing machine. This can be done by using a tool like ettercap<sup>[24]</sup>. It can be installed by using brew on Mac OS X.
 
 ```bash
 $ brew install ettercap
+```
+
+Ettercap can also be installed through `apt-get` on Debian based linux distributions.
+
+```bash
+sudo apt-get install zlib1g zlib1g-dev
+sudo apt-get install build-essential
+sudo apt-get install ettercap
 ```
 
 FCM can use two different protocols to communicate with the Google backend, either XMPP or HTTP.
 
 **HTTP**
 
-The ports used by FCM for HTTP are 5228, 5229, and 5230. Typically only 5228 is used, but sometimes also 5229 and 5230 is used.
+The ports used by FCM for HTTP are 5228, 5229, and 5230. Typically only 5228 is used, but sometimes also 5229 or 5230 is used.
 
 * Configure a local port forwarding on your machine for the ports used by FCM. The following example can be used on Mac OS X<sup>[23]</sup>:
 
@@ -411,15 +385,35 @@ Start using the app and trigger a function that uses FCM. You should see HTTP me
 
 ![Intercepted Messages](Images/Chapters/0x05b/FCM_Intercept.png)
 
-If XMPP is used, Burp will not show this traffic, but either a Burp Plugin like Burp-non-HTTP-Extension<sup>[28]<sup> can be used or Mitm-relay<sup>[27]<sup> that leverages Burp to visualize XMPP traffic.
+Interception proxies like Burp or OWASP ZAP will not show this traffic, as they are not capable of decoding it properly by default. There are two plugins available for Burp, which are Burp-non-HTTP-Extension<sup>[28]<sup> and Mitm-relay<sup>[27]<sup> that leverages Burp to visualize XMPP traffic.
 
-As an alternative to a Mitm attack executed on your machine, a Wifi Access Point (AP) or router can also be used. The port forwarding need to be configured then on the AP or router and need to point to your interception proxy that need to listen on the external interface. For this test setup tools like ettercap are not needed.
+As an alternative to a MITM attack executed on your machine, a Wifi Access Point (AP) or router can also be used instead. The setup would become a little bit more complicated, as port forwarding needs to be configured on the AP or router and need to point to your interception proxy that need to listen on the external interface of your machine. For this test setup tools like ettercap are not needed anymore.
 
+Tools like Wireshark can be used to monitor and record the traffic for further investigation either locally on your machine or through a span port, if the router or Wifi AP offers this functionality.
 
-#### Reverse Engineering
+#### Potential Obstacles
 
-There are many reason to reverse engineer an application: to understand application security logic, to identify application secrets and so on. More details on reverse engineering Android applications are covered in the next chapter [Tampering and Reverse Engineering on Android](0x05b-Reverse-Engineering-and-Tampering.md).
+For the following security controls that might be implemented into the app you are about to test, it should be discussed with the project team if it is possible to provide a debug build. A debug build has several benefits when provided during a (white box) test, as it allows a more comprehensive analysis.
 
+##### SSL Pinning
+
+SSL Pinning is a mechanism to make dynamic analysis harder. Certificates provided by an interception proxy to enable a Man-in-the-middle position are declined and the app will not make any requests. To be able to efficiently test during a white box test, a debug build with deactivated SSL Pinning should be provided.
+
+For a black box test, there are several ways to bypass SSL Pinning, for example SSLUnpinning<sup>[11]</sup> or Android-SSL-TrustKiller<sup>[12]</sup>. Therefore bypassing can be done within seconds, but only if the app uses the API functions that are covered for these tools. If the app is using a different framework or library to implement SSL Pinning that is not implemented yet in those tools, the patching and deactivation of SSL Pinning needs to be done manually and can become time consuming.
+
+To manually deactivate SSL Pinning there are two ways:
+* Dynamical Patching while running the App, by using Frida<sup>[9] [13]</sup> or ADBI<sup>[10]</sup>
+* Disassembling the APK, identify the SSL Pinning logic in smali code, patch it and reassemble the APK<sup>[7] [22]</sup>
+
+Once successful, the prerequisites for a dynamic analysis are met and the apps communication can be investigated.
+
+See also test case "Testing Custom Certificate Stores and SSL Pinning" for further details.
+
+##### Root Detection
+
+Root detection can be implemented using pre-made libraries like RootBeer<sup>[14]</sup> or custom checks. An extensive list of root detection methods is presented in the "Testing Anti-Reversing Defenses on Android" chapter.
+
+In a typical mobile app security build, you'll usually want to test a debug build with root detection disabled. If such a build is not available for testing, root detection can be disabled using a variety of methods which will be introduced later in this book.
 
 ### References
 
