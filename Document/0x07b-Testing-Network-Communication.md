@@ -6,7 +6,7 @@ The following chapter outlines network communication requirements of the MASVS i
 
 #### Overview
 
-A functionality of most mobile applications requires sending or receiving information from services on the Internet. This reveals another surface of attacks aimed at data on the way. It's possible for an attacker to sniff or even modify (MiTM attacks) an unencrypted information if he controls any part of network infrastructure (e.g. an WiFi Access Point)<sup>[1]</sup>. For this reason, developers should make a general rule, that any confidential data cannot be sent in a cleartext<sup>[2]</sup>.
+A functionality of most mobile applications requires sending or receiving information from services on the Internet. This reveals another surface of attacks aimed at data on the way. It's possible for an attacker to sniff or even modify (MiTM attacks) an unencrypted information if he controls any part of network infrastructure (e.g. an WiFi Access Point). For this reason, developers should make a general rule, that any [confidential data cannot be sent in a cleartext](https://developer.android.com/training/articles/security-tips.html#Networking "Android Developer Documentation - Security Tips").
 
 #### Static Analysis
 
@@ -27,7 +27,7 @@ Then you can display captured traffic in a human-readable way, using Wireshark
 nc localhost 1234 | sudo wireshark -k -S -i –
 ```
 
-* Capture all network traffic using interception proxy, like OWASP ZAP<sup>[3]</sup> or Burp Suite<sup>[4]</sup> and observe whether all requests are using HTTPS instead of HTTP.
+* Capture all network traffic using interception proxy, like [OWASP ZAP](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project "OWASP ZAP") or [Burp Suite](https://portswigger.net/burp/ "Burp Suite") and observe whether all requests are using HTTPS instead of HTTP.
 
 > Please note, that some applications may not work with proxies like Burp or ZAP (because of customized HTTP/HTTPS implementation, or Certificate Pinning). In such case you may use a VPN server to forward all traffic to your Burp/ZAP proxy. You can easily do this, using Vproxy.
 
@@ -35,11 +35,11 @@ It is important to capture all traffic (TCP and UDP), so you should run all poss
 
 #### Remediation
 
-Ensure that sensitive information is being sent via secure channels, using HTTPS<sup>[5]</sup>, or SSLSocket<sup>[6]</sup> for socket-level communication using TLS.
+Ensure that sensitive information is being sent via secure channels, using [HTTPS](https://developer.android.com/reference/javax/net/ssl/HttpsURLConnection.html "Android Developer Documentation - HttpsURLConnection"), or [SSLSocket](https://developer.android.com/reference/javax/net/ssl/SSLSocket.html "Android Developer Documentation - SSLSocket") for socket-level communication using TLS.
 
-Please be aware that `SSLSocket` **does not** verify hostname. The hostname verification should be done by using `getDefaultHostnameVerifier()` with expected hostname. Consult documentation<sup>[7]</sup> for an example of correct usage.
+Please be aware that `SSLSocket` **does not** verify hostname. The hostname verification should be done by using `getDefaultHostnameVerifier()` with expected hostname. Consult [documentation](https://developer.android.com/training/articles/security-ssl.html#WarningsSslSocket "Android Developer Documentation - SSL Security") for an example of correct usage.
 
-Some applications may use localhost address, or binding to INADDR_ANY for handling sensitive IPC, what is bad from security perspective, as this interface is accessible for other applications installed on a device. For such purpose developers should consider using secure Android IPC mechanism<sup>[8]</sup>.
+Some applications may use localhost address, or binding to INADDR_ANY for handling sensitive IPC, what is bad from security perspective, as this interface is accessible for other applications installed on a device. For such purpose developers should consider using secure [Android IPC mechanism](https://developer.android.com/reference/android/app/Service.html "Android Developer Documentation - Service class").
 
 #### References
 
@@ -52,15 +52,6 @@ Some applications may use localhost address, or binding to INADDR_ANY for handli
 ##### CWE
 * CWE-319 - Cleartext Transmission of Sensitive Information
 
-##### Info
-* [1] https://cwe.mitre.org/data/definitions/319.html
-* [2] https://developer.android.com/training/articles/security-tips.html#Networking
-* [3] https://security.secure.force.com/security/tools/webapp/zapandroidsetup
-* [4] https://support.portswigger.net/customer/portal/articles/1841101-configuring-an-android-device-to-work-with-burp
-* [5] https://developer.android.com/reference/javax/net/ssl/HttpsURLConnection.html
-* [6] https://developer.android.com/reference/javax/net/ssl/SSLSocket.html
-* [7] https://developer.android.com/training/articles/security-ssl.html#WarningsSslSocket
-* [8] https://developer.android.com/reference/android/app/Service.html
 
 ##### Tools
 * Tcpdump - http://www.androidtcpdump.com/
@@ -75,7 +66,7 @@ Some applications may use localhost address, or binding to INADDR_ANY for handli
 
 Many mobile applications consume remote services over the HTTP protocol. HTTPS is HTTP over SSL/TLS. Other encrypted channels are less common. Thus, it is important to ensure that TLS configuration is done properly. SSL is the older name of the TLS protocol and should no longer be used, since SSLv3 is considered vulnerable. TLS v1.2 and v1.3 are the most modern and most secure versions, but many services still include configurations for TLS v1.0 and v1.1, to ensure compatibility with the older clients. This is especially true for browsers that can connect to arbitrary servers and for servers that expect connections from arbitrary clients.
 
-In the situation where both the client and the server are controlled by the same organization and are used for the purpose of only communicating with each other, higher levels of security can be achieved by more strict configurations<sup>[1]</sup>.
+In the situation where both the client and the server are controlled by the same organization and are used for the purpose of only communicating with each other, higher levels of security can be achieved by [more strict configurations](https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001) "Testing for Weak SSL/TLS Ciphers").
 
 If a mobile application connects to a specific server for a specific part of its functionality, the networking stack for that client can be tuned to ensure highest levels of security possible given the server configuration. Additionally, the mobile application may have to use a weaker configuration due to the lack of support in the underlying operating system.
 
@@ -152,7 +143,7 @@ sslyze --regular www.example.com:443
 ```
 o-saft.tcl
 ```
-or via command. There are multiple options<sup>[2]</sup>, but the most general one, verifying certificate, ciphers and SSL connection is the following:
+or via command. There are [multiple options](https://www.owasp.org/index.php/O-Saft/Documentation#COMMANDS "O-Saft various tests"), but the most general one, verifying certificate, ciphers and SSL connection is the following:
 
 ```
 perl o-saft.pl +check www.example.com:443
@@ -160,7 +151,7 @@ perl o-saft.pl +check www.example.com:443
 
 #### Remediation
 
-Any vulnerability or misconfiguration should be solved either by patching or reconfiguring the server. To properly configure transport layer protection for network communication, please follow the OWASP Transport Layer Protection cheat sheet<sup>[3]</sup> and Qualys TLS best practices<sup>[4]</sup>.
+Any vulnerability or misconfiguration should be solved either by patching or reconfiguring the server. To properly configure transport layer protection for network communication, please follow the [OWASP Transport Layer Protection cheat sheet](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet "Transport Layer Protection Cheat Sheet") and [Qualys TLS best practices](https://dev.ssllabs.com/projects/best-practices/ "Qualys SSL/TLS Deployment Best Practices").
 
 #### References
 
@@ -173,15 +164,6 @@ Any vulnerability or misconfiguration should be solved either by patching or rec
 ##### CWE
 * CWE-327 - Use of a Broken or Risky Cryptographic Algorithm - https://cwe.mitre.org/data/definitions/327.html
 
-##### Info
-* [1] Testing for Weak SSL/TLS Ciphers - https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001)
-* [2] O-Saft various tests - https://www.owasp.org/index.php/O-Saft/Documentation#COMMANDS
-* [3] Transport Layer Protection Cheat Sheet - https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet
-* [4] Qualys SSL/TLS Deployment Best Practices - https://dev.ssllabs.com/projects/best-practices/
-* [5] okhttp `okhttp.ConnectionSpec` class, `APPROVED_CIPHER_SUITES` array - https://github.com/square/okhttp/
-* [6] Requirements for Connecting Using ATS, App Transport Security - https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW57
-
-
 ##### Tools
 * testssl.sh- https://testssl.sh
 * sslyze - https://github.com/nabla-c0d3/sslyze
@@ -191,7 +173,7 @@ Any vulnerability or misconfiguration should be solved either by patching or rec
 
 #### Overview
 
-For sensitive applications, like banking apps, OWASP MASVS introduces "Defense in Depth" verification level<sup>[1]</sup>. Critical operations (e.g. user enrollment, or account recovery) of such sensitive applications are the most attractive targets from attacker's perspective. This creates a need of implementing advanced security controls for such operations, like adding additional channels (e.g. SMS and e-mail) to confirm user's action. Additional channels may reduce a risk of many attacking scenarios (mainly phishing), but only when they are out of any security faults.
+For sensitive applications, like banking apps, [OWASP MASVS](https://github.com/OWASP/owasp-masvs/blob/master/Document/0x03-Using_the_MASVS.md "The Mobile Application Security Verification Standard") introduces "Defense in Depth" verification level. Critical operations (e.g. user enrollment, or account recovery) of such sensitive applications are the most attractive targets from attacker's perspective. This creates a need of implementing advanced security controls for such operations, like adding additional channels (e.g. SMS and e-mail) to confirm user's action. Additional channels may reduce a risk of many attacking scenarios (mainly phishing), but only when they are out of any security faults.
 
 #### Static Analysis
 
@@ -210,7 +192,7 @@ Identify all critical operations implemented in tested application (e.g. user en
 
 #### Remediation
 
-Ensure that critical operations require at least one additional channel to confirm user's action. Each channel must not be bypassed to execute a critical operation. If you are going to implement additional factor to verify user's identity, you may consider usage of Infobip 2FA library<sup>[2]</sup>, one-time passcodes via Google Authenticator<sup>[3]</sup>.
+Ensure that critical operations require at least one additional channel to confirm user's action. Each channel must not be bypassed to execute a critical operation. If you are going to implement additional factor to verify user's identity, you may consider usage of [Infobip 2FA library](https://2-fa.github.io/libraries/android-library.html "Infobip 2FA library"), one-time passcodes via [Google Authenticator](https://github.com/google/google-authenticator-android "Google Authenticator for Android").
 
 #### References
 
@@ -222,8 +204,3 @@ Ensure that critical operations require at least one additional channel to confi
 
 ##### CWE
 * CWE-956 - Software Fault Patterns (SFPs) within the Channel Attack cluster
-
-##### Info
-* [1] The Mobile Application Security Verification Standard - https://github.com/OWASP/owasp-masvs/blob/master/Document/0x03-Using_the_MASVS.md
-* [2] Infobip 2FA library - https://2-fa.github.io/libraries/android-library.html
-* [3] Google Authenticator for Android - https://github.com/google/google-authenticator-android
